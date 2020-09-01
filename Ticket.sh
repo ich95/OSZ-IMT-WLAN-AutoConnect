@@ -12,7 +12,7 @@ echo -n "Passwort eingeben: "; stty -echo; read PASS; stty echo; echo #Passwort 
 #read -p -s geht nicht, der Grund ist auch StackOverflow nicht bekannt
 
 while true; do #Schleife ohne exit Bedingung, da kein Abbruch durch Programm selbst gewünscht
-    `curl -s  wlan-login.oszimt.de/logon/cgi/index.cgi > login.html` #Login Seite mit curl abrufen und in Datei sichern -s -> keine Fortschrittsbalken anzeigen
+    `curl -sk  wlan-login.oszimt.de/logon/cgi/index.cgi > login.html` #Login Seite mit curl abrufen und in Datei sichern -s -> keine Fortschrittsbalken anzeigen
     CODE=`grep -Eo '[0-9a-f]{32}\s[0-9a-f]{32}' login.html` #anmelde-code herausfiltern
 
     #Anmeldecode besteht aus 2 Hex-Bloecken zu je 32 Zeichen länge und aendert sich bei jedem neuladen der Seite
@@ -33,6 +33,6 @@ while true; do #Schleife ohne exit Bedingung, da kein Abbruch durch Programm sel
         fi
     else
         #nicht leer -> muss anmelden
-        curl -sd "uid=$USER&pwd=$PASS&ta_id=$CODE&voucher_logon_btn=TRUE" wlan-login.oszimt.de/logon/cgi/index.cgi#anchor_voucherLogon #Senden der Daten an das Ziel des Formulars
+        curl -sdk "uid=$USER&pwd=$PASS&ta_id=$CODE&voucher_logon_btn=TRUE" wlan-login.oszimt.de/logon/cgi/index.cgi#anchor_voucherLogon #Senden der Daten an das Ziel des Formulars
     fi
 done #Ende der Schleife
